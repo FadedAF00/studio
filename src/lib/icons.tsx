@@ -20,7 +20,6 @@ export const iconMap: { [key: string]: React.ComponentType<{ className?: string 
   twitch: Twitch,
   bluesky: Bluesky,
   spotify: Spotify,
-  sunk: Link,
   activision: Gamepad2,
   epic: Gamepad2,
   riot: Gamepad2,

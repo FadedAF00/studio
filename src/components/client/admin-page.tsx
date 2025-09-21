@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { GetIcon, iconMap } from '@/lib/icons.tsx';
+import { GetIcon, iconMap } from '@/lib/icons';
 import { defaultConfig } from '@/lib/config';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
@@ -31,9 +31,16 @@ const copyButtonSchema = z.object({
   visible: z.boolean(),
 });
 
+const spotifyPlaylistSchema = z.object({
+  id: z.string(),
+  url: z.string().url({ message: 'Please enter a valid embed URL.' }),
+  visible: z.boolean(),
+});
+
 const appConfigSchema = z.object({
   socials: z.array(socialLinkSchema),
   copyButtons: z.array(copyButtonSchema),
+  playlists: z.array(spotifyPlaylistSchema),
 });
 
 type FormValues = z.infer<typeof appConfigSchema>;
@@ -47,6 +54,7 @@ export function AdminPage() {
     defaultValues: {
       socials: config.socials,
       copyButtons: config.copyButtons,
+      playlists: config.playlists,
     },
   });
 
@@ -68,11 +76,21 @@ export function AdminPage() {
     name: 'copyButtons',
   });
 
+  const {
+    fields: playlistFields,
+    append: appendPlaylist,
+    remove: removePlaylist,
+  } = useFieldArray({
+    control,
+    name: 'playlists',
+  });
+
   const onSubmit = (data: FormValues) => {
     setConfig((prevConfig) => ({
       ...prevConfig,
       socials: data.socials,
       copyButtons: data.copyButtons,
+      playlists: data.playlists,
     }));
     toast({
       title: 'Success!',
@@ -81,11 +99,13 @@ export function AdminPage() {
   };
 
   const handleReset = () => {
-    reset({
+    const newConfig = {
       socials: defaultConfig.socials,
       copyButtons: defaultConfig.copyButtons,
-    });
-    setConfig(defaultConfig);
+      playlists: defaultConfig.playlists,
+    }
+    reset(newConfig);
+    setConfig((prev) => ({...prev, ...newConfig}));
     toast({
       title: 'Settings Reset',
       description: 'Your settings have been reset to the default configuration.',
@@ -166,7 +186,7 @@ export function AdminPage() {
                           />
                         </div>
                       </div>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col items-center gap-2">
                         <Controller
                           control={control}
                           name={`socials.${index}.visible`}
@@ -249,7 +269,7 @@ export function AdminPage() {
                           />
                         </div>
                       </div>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col items-center gap-2">
                         <Controller
                           control={control}
                           name={`copyButtons.${index}.visible`}
@@ -274,6 +294,63 @@ export function AdminPage() {
                   ))}
                 </div>
               </div>
+
+              <Separator />
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <h3 className="mb-4 text-2xl font-semibold">Spotify Playlists</h3>
+                  <Button
+                    type="button"
+                    onClick={() =>
+                      appendPlaylist({
+                        id: `playlist-${Date.now()}`,
+                        url: 'https://open.spotify.com/embed/playlist/...',
+                        visible: true,
+                      })
+                    }
+                  >
+                    Add Playlist
+                  </Button>
+                </div>
+                <div className="space-y-4">
+                  {playlistFields.map((field, index) => (
+                    <div key={field.id} className="flex items-start gap-4 rounded-lg border p-4">
+                      <GetIcon name="spotify" className="mt-2 h-6 w-6 flex-shrink-0" />
+                      <div className="flex-1">
+                          <Label htmlFor={`playlists.${index}.url`}>Embed URL</Label>
+                          <Input
+                            id={`playlists.${index}.url`}
+                            {...register(`playlists.${index}.url`)}
+                            placeholder="https://open.spotify.com/embed/playlist/..."
+                          />
+                      </div>
+                      <div className="flex flex-col items-center gap-2">
+                        <Controller
+                          control={control}
+                          name={`playlists.${index}.visible`}
+                          render={({ field: { onChange, value } }) => (
+                            <Switch
+                              checked={value}
+                              onCheckedChange={onChange}
+                              aria-label="Toggle playlist visibility"
+                            />
+                          )}
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => removePlaylist(index)}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
 
               <div className="flex justify-end gap-4 pt-4">
                 <Button type="button" variant="outline" onClick={handleReset}>

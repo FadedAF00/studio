@@ -35,7 +35,6 @@ export const defaultConfig: AppConfig = {
     { id: 'twitch', label: 'Twitch', icon: 'twitch', url: '#', visible: true },
     { id: 'bluesky', label: 'BlueSky', icon: 'bluesky', url: '#', visible: true },
     { id: 'spotify', label: 'Spotify Profile', icon: 'spotify', url: '#', visible: true },
-    { id: 'sunk', label: 'Sunk', icon: 'sunk', url: '#', visible: true },
   ],
   copyButtons: [
     { id: 'discord-user', label: 'Discord Username', icon: 'discord', value: 'your_user#0000', visible: true },
