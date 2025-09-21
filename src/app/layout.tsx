@@ -4,6 +4,7 @@ import { AppContextProvider } from '@/context/app-context';
 import { Toaster } from '@/components/ui/toaster';
 import Link from 'next/link';
 import { Cog } from 'lucide-react';
+import { AuthProvider } from '@/lib/auth';
 
 export const metadata: Metadata = {
   title: 'ConnectVerse',
@@ -30,16 +31,18 @@ export default function RootLayout({
         />
       </head>
       <body className="font-headline antialiased">
-        <AppContextProvider>
-          <main>{children}</main>
-          <footer className="fixed bottom-4 right-4">
-            <Link href="/admin">
-              <Cog className="h-6 w-6 text-muted-foreground transition-colors hover:text-foreground" />
-              <span className="sr-only">Admin Settings</span>
-            </Link>
-          </footer>
-          <Toaster />
-        </AppContextProvider>
+        <AuthProvider>
+          <AppContextProvider>
+            <main>{children}</main>
+            <footer className="fixed bottom-4 right-4">
+              <Link href="/admin">
+                <Cog className="h-6 w-6 text-muted-foreground transition-colors hover:text-foreground" />
+                <span className="sr-only">Admin Settings</span>
+              </Link>
+            </footer>
+            <Toaster />
+          </AppContextProvider>
+        </AuthProvider>
       </body>
     </html>
   );

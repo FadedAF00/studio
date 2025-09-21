@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('admin@example.com');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
   const { toast } = useToast();
@@ -17,7 +17,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await login(username, password);
+    const success = await login(email, password);
     if (success) {
       toast({
         title: 'Login Successful',
@@ -27,7 +27,7 @@ export default function LoginPage() {
     } else {
       toast({
         title: 'Login Failed',
-        description: 'Invalid username or password.',
+        description: 'Invalid email or password.',
         variant: 'destructive',
       });
     }
@@ -43,13 +43,13 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                type="text"
-                placeholder="admin"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                id="email"
+                type="email"
+                placeholder="admin@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>

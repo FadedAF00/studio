@@ -14,6 +14,7 @@ import { defaultConfig } from '@/lib/config';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Trash } from 'lucide-react';
+import { useAuth } from '@/lib/auth';
 
 const socialLinkSchema = z.object({
   id: z.string(),
@@ -46,16 +47,13 @@ const appConfigSchema = z.object({
 type FormValues = z.infer<typeof appConfigSchema>;
 
 export function AdminPage() {
-  const { config, setConfig } = useAppContext();
+  const { config, saveConfig } = useAppContext();
+  const { logout } = useAuth();
   const { toast } = useToast();
 
   const { control, register, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(appConfigSchema),
-    defaultValues: {
-      socials: config.socials,
-      copyButtons: config.copyButtons,
-      playlists: config.playlists,
-    },
+    values: config,
   });
 
   const {
@@ -85,27 +83,22 @@ export function AdminPage() {
     name: 'playlists',
   });
 
-  const onSubmit = (data: FormValues) => {
-    setConfig((prevConfig) => ({
-      ...prevConfig,
-      socials: data.socials,
-      copyButtons: data.copyButtons,
-      playlists: data.playlists,
-    }));
+  const onSubmit = async (data: FormValues) => {
+    await saveConfig(data);
     toast({
       title: 'Success!',
-      description: 'Your changes have been saved.',
+      description: 'Your changes have been saved to the database.',
     });
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     const newConfig = {
       socials: defaultConfig.socials,
       copyButtons: defaultConfig.copyButtons,
       playlists: defaultConfig.playlists,
     }
     reset(newConfig);
-    setConfig((prev) => ({...prev, ...newConfig}));
+    await saveConfig(newConfig);
     toast({
       title: 'Settings Reset',
       description: 'Your settings have been reset to the default configuration.',
@@ -118,17 +111,22 @@ export function AdminPage() {
     <div className="flex min-h-screen w-full justify-center p-4 sm:p-6 md:p-8">
       <div className="w-full max-w-4xl">
         <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl">Admin Panel</CardTitle>
-            <CardDescription>
-              Manage your social links and user IDs. Changes are saved locally.
-            </CardDescription>
-            <Button asChild variant="link" className="absolute right-6 top-6">
-              <Link href="/">
-                <GetIcon name="home" className="mr-2" />
-                Back to Site
-              </Link>
-            </Button>
+          <CardHeader className="flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-3xl">Admin Panel</CardTitle>
+              <CardDescription>
+                Manage your social links and user IDs. Changes are saved to Firestore.
+              </CardDescription>
+            </div>
+            <div className='flex gap-2'>
+              <Button asChild variant="link">
+                <Link href="/">
+                  <GetIcon name="home" className="mr-2" />
+                  Back to Site
+                </Link>
+              </Button>
+               <Button onClick={logout} variant="outline">Logout</Button>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

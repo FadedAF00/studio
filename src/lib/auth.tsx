@@ -7,14 +7,19 @@ import {
   ReactNode,
   useEffect,
 } from 'react';
-
-type User = {
-  username: string;
-};
+import {
+  User,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 
 type AuthContextType = {
   user: User | null;
-  login: (username: string, pass: string) => Promise<boolean>;
+  loading: boolean;
+  login: (email: string, pass: string) => Promise<boolean>;
   logout: () => void;
 };
 
@@ -22,37 +27,36 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    // Check if user is logged in from a previous session
-    const storedUser = sessionStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = async (username: string, pass: string) => {
-    // In a real app, you'd fetch this from an environment variable
-    const adminUser = process.env.NEXT_PUBLIC_ADMIN_USER || 'admin';
-    const adminPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'password';
-
-    if (username === adminUser && pass === adminPass) {
-      const userData = { username };
-      setUser(userData);
-      sessionStorage.setItem('user', JSON.stringify(userData));
+  const login = async (email: string, pass: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
       return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
-    return false;
   };
 
-  const logout = () => {
-    setUser(null);
-    sessionStorage.removeItem('user');
+  const logout = async () => {
+    await signOut(auth);
+    router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 }
