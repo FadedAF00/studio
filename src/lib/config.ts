@@ -21,12 +21,22 @@ export type SpotifyPlaylist = {
 };
 
 export type AppConfig = {
+  profile: {
+    name: string;
+    bio: string;
+    imageUrl: string;
+  };
   socials: SocialLink[];
   copyButtons: CopyButton[];
   playlists: SpotifyPlaylist[];
 };
 
 export const defaultConfig: AppConfig = {
+  profile: {
+    name: 'ConnectVerse',
+    bio: 'Your universe of connections, all in one place.',
+    imageUrl: 'https://picsum.photos/seed/101/200/200',
+  },
   socials: [
     { id: 'discord', label: 'Discord', icon: 'discord', url: '#', visible: true },
     { id: 'x', label: 'X (Twitter)', icon: 'twitter', url: '#', visible: true },

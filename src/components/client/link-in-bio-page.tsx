@@ -1,14 +1,15 @@
 'use client';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { FamousQuote } from '@/components/client/famous-quote';
 import { NowPlaying } from '@/components/client/now-playing';
 import { SocialLinks } from '@/components/client/social-links';
 import { SpotifyEmbeds } from '@/components/client/spotify-embed';
 import { Separator } from '@/components/ui/separator';
+import { useAppContext } from '@/context/app-context';
 
 export function LinkInBioPage() {
-  const profilePic = PlaceHolderImages.find((img) => img.id === 'profile-picture');
+  const { config } = useAppContext();
+  const { name, bio, imageUrl } = config.profile;
 
   return (
     <div className="flex min-h-screen w-full justify-center bg-gradient-to-b from-background to-primary/10 p-4 sm:p-6 md:p-8">
@@ -16,18 +17,18 @@ export function LinkInBioPage() {
         <header className="flex flex-col items-center gap-4 text-center">
           <div className="relative h-32 w-32">
             <Image
-              src={profilePic?.imageUrl || 'https://picsum.photos/seed/101/200/200'}
+              src={imageUrl}
               alt="Profile Picture"
               fill
               priority
               className="rounded-full border-4 border-primary object-cover shadow-lg"
-              data-ai-hint={profilePic?.imageHint || 'profile portrait'}
+              data-ai-hint={'profile portrait'}
             />
           </div>
           <div>
-            <h1 className="text-4xl font-bold">ConnectVerse</h1>
+            <h1 className="text-4xl font-bold">{name}</h1>
             <p className="text-md text-muted-foreground">
-              Your universe of connections, all in one place.
+              {bio}
             </p>
           </div>
         </header>

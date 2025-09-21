@@ -13,8 +13,15 @@ import { GetIcon, iconMap } from '@/lib/icons';
 import { defaultConfig } from '@/lib/config';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { Trash } from 'lucide-react';
+import { Trash, BarChart2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
+import { Textarea } from '@/components/ui/textarea';
+
+const profileSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  bio: z.string().max(200, 'Bio cannot be longer than 200 characters'),
+  imageUrl: z.string().url({ message: 'Please enter a valid URL.' }),
+});
 
 const socialLinkSchema = z.object({
   id: z.string(),
@@ -39,6 +46,7 @@ const spotifyPlaylistSchema = z.object({
 });
 
 const appConfigSchema = z.object({
+  profile: profileSchema,
   socials: z.array(socialLinkSchema),
   copyButtons: z.array(copyButtonSchema),
   playlists: z.array(spotifyPlaylistSchema),
@@ -93,6 +101,7 @@ export function AdminPage() {
 
   const handleReset = async () => {
     const newConfig = {
+      profile: defaultConfig.profile,
       socials: defaultConfig.socials,
       copyButtons: defaultConfig.copyButtons,
       playlists: defaultConfig.playlists,
@@ -130,6 +139,26 @@ export function AdminPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              <div>
+                <h3 className="mb-4 text-2xl font-semibold">Profile Settings</h3>
+                <div className="space-y-4 rounded-lg border p-4">
+                  <div>
+                    <Label htmlFor="profile.name">Display Name</Label>
+                    <Input id="profile.name" {...register('profile.name')} placeholder="Your Name" />
+                  </div>
+                  <div>
+                    <Label htmlFor="profile.bio">Bio</Label>
+                    <Textarea id="profile.bio" {...register('profile.bio')} placeholder="A short description about yourself." />
+                  </div>
+                  <div>
+                    <Label htmlFor="profile.imageUrl">Profile Picture URL</Label>
+                    <Input id="profile.imageUrl" {...register('profile.imageUrl')} placeholder="https://example.com/image.png" />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+              
               <div>
                 <div className="flex items-center justify-between">
                   <h3 className="mb-4 text-2xl font-semibold">Social Media Links</h3>
@@ -346,6 +375,34 @@ export function AdminPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <h3 className="mb-4 text-2xl font-semibold">Analytics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total Page Views</CardTitle>
+                            <BarChart2 className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">N/A</div>
+                            <p className="text-xs text-muted-foreground">Analytics not yet implemented</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total Link Clicks</CardTitle>
+                             <BarChart2 className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">N/A</div>
+                            <p className="text-xs text-muted-foreground">Analytics not yet implemented</p>
+                        </CardContent>
+                    </Card>
                 </div>
               </div>
 
