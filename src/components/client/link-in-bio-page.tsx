@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import { NowPlaying } from '@/components/client/now-playing';
 import { SocialLinks } from '@/components/client/social-links';
@@ -15,7 +16,8 @@ export function LinkInBioPage({ config }: { config: AppConfig }) {
           <Image
             src={imageUrl}
             alt="Profile Picture"
-            fill
+            width={128}
+            height={128}
             priority
             className="rounded-full border-4 border-primary object-cover shadow-lg"
             data-ai-hint={'profile portrait'}
