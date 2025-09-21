@@ -27,7 +27,7 @@ export default function LoginPage() {
     } else {
       toast({
         title: 'Login Failed',
-        description: 'Invalid email or password.',
+        description: 'Invalid email or password. Please check the credentials you set up in the Firebase Console.',
         variant: 'destructive',
       });
     }
