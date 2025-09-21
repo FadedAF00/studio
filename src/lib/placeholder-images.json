@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "profile-picture",
+      "description": "A placeholder for the user's profile picture.",
+      "imageUrl": "https://picsum.photos/seed/101/200/200",
+      "imageHint": "profile portrait"
+    },
+    {
+      "id": "album-art",
+      "description": "A placeholder for Spotify album art.",
+      "imageUrl": "https://picsum.photos/seed/102/200/200",
+      "imageHint": "album cover"
+    }
+  ]
 }
