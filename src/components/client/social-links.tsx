@@ -51,12 +51,17 @@ export function SocialLinks() {
           onClick={() => handleCopy(button.value, button.id, button.label)}
         >
           <GetIcon name={button.icon} className="mr-4 h-6 w-6" />
-          <div className="flex flex-1 items-center justify-between">
-            <span className="truncate">{button.label}</span>
+          <div className="flex flex-1 items-center justify-between overflow-hidden">
+            <div className="flex flex-col items-start overflow-hidden">
+              <span className="truncate font-semibold">{button.label}</span>
+              <span className="truncate text-sm text-muted-foreground">
+                {button.value}
+              </span>
+            </div>
             {copiedId === button.id ? (
-              <Check className="h-5 w-5 text-green-400" />
+              <Check className="h-5 w-5 flex-shrink-0 text-green-400" />
             ) : (
-              <Copy className="h-5 w-5 text-muted-foreground" />
+              <Copy className="h-5 w-5 flex-shrink-0 text-muted-foreground" />
             )}
           </div>
         </Button>
