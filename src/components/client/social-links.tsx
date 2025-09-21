@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useAppContext } from '@/context/app-context';
 import { Button } from '@/components/ui/button';
-import { GetIcon } from '@/lib/icons';
+import { GetIcon } from '@/lib/icons.tsx';
 import { useToast } from '@/hooks/use-toast';
 import { Check, Copy } from 'lucide-react';
 import Link from 'next/link';

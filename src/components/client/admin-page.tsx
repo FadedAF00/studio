@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { GetIcon } from '@/lib/icons';
+import { GetIcon } from '@/lib/icons.tsx';
 import { defaultConfig } from '@/lib/config';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';

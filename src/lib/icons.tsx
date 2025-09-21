@@ -2,7 +2,6 @@ import {
   Twitter,
   Youtube,
   Twitch,
-  Spotify,
   Link,
   Gamepad2,
   Home,
@@ -10,6 +9,7 @@ import {
 import { Discord } from '@/components/icons/discord';
 import { Tiktok } from '@/components/icons/tiktok';
 import { Bluesky } from '@/components/icons/bluesky';
+import { Spotify } from '@/components/icons/spotify';
 import React from 'react';
 
 export const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {

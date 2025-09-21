@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent } from '@/components/ui/card';
-import { Spotify } from 'lucide-react';
+import { GetIcon } from '@/lib/icons';
 
 const SoundWave = () => (
   <div className="flex items-center gap-0.5">
@@ -59,7 +59,7 @@ export function NowPlaying() {
             </p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Spotify className="h-6 w-6 text-green-500" />
+            <GetIcon name="spotify" className="h-6 w-6 text-green-500" />
             <SoundWave />
           </div>
         </div>
