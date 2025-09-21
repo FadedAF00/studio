@@ -1,14 +1,19 @@
 'use client';
 import { useState } from 'react';
-import { useAppContext } from '@/context/app-context';
 import { Button } from '@/components/ui/button';
 import { GetIcon } from '@/lib/icons.tsx';
 import { useToast } from '@/hooks/use-toast';
 import { Check, Copy } from 'lucide-react';
 import Link from 'next/link';
+import type { SocialLink, CopyButton } from '@/lib/config';
 
-export function SocialLinks() {
-  const { config } = useAppContext();
+export function SocialLinks({
+  socials,
+  copyButtons,
+}: {
+  socials: SocialLink[];
+  copyButtons: CopyButton[];
+}) {
   const { toast } = useToast();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -22,8 +27,8 @@ export function SocialLinks() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const visibleSocials = config.socials.filter((s) => s.visible);
-  const visibleCopyButtons = config.copyButtons.filter((c) => c.visible);
+  const visibleSocials = socials.filter((s) => s.visible);
+  const visibleCopyButtons = copyButtons.filter((c) => c.visible);
 
   return (
     <div className="flex w-full flex-col gap-3">

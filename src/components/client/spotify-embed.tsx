@@ -1,10 +1,12 @@
-'use client';
-import { useAppContext } from '@/context/app-context';
 import { Card } from '@/components/ui/card';
+import type { SpotifyPlaylist } from '@/lib/config';
 
-export function SpotifyEmbeds() {
-  const { config } = useAppContext();
-  const visiblePlaylists = config.playlists.filter((p) => p.visible);
+export function SpotifyEmbeds({
+  playlists,
+}: {
+  playlists: SpotifyPlaylist[];
+}) {
+  const visiblePlaylists = playlists.filter((p) => p.visible);
 
   if (visiblePlaylists.length === 0) {
     return null;
